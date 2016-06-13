@@ -4,7 +4,7 @@ MAINTAINER Jeff Morgan "jam1401@gmail.com"
 RUN apt-get update && apt-get clean
 RUN apt-get install -q -y openjdk-7-jdk wget unzip lib32stdc++6 lib32z1 && apt-get clean
 
-ADD http://mirrors.jenkins-ci.org/war/1.576/jenkins.war /opt/jenkins.war
+ADD http://mirrors.jenkins-ci.org/war/latest/jenkins.war /opt/jenkins.war
 RUN chmod 644 /opt/jenkins.war
 ENV JENKINS_HOME /jenkins
 ENV WGET wget --no-check-certificate -q
@@ -12,10 +12,10 @@ VOLUME /jenkins/jobs
 
 # Install Android SDK
 RUN mkdir /usr/local/android
-ADD http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz /usr/local/android/android-sdk_r23.0.2-linux.tgz
+ADD http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz /usr/local/android/android-sdk_r24.4.1-linux.tgz
 WORKDIR /usr/local/android
-RUN tar -xzvf android-sdk_r23.0.2-linux.tgz
-RUN echo "y" | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools,build-tools-20.0.0,build-tools-19.1.0,android-19,android-20,extra-android-support,extra-google-google_play_services
+RUN tar -xzvf android-sdk_r24.4.1-linux.tgz
+RUN echo "y" | ./android-sdk-linux/tools/android update sdk --no-ui --all 
 ENV ANDROID_HOME /usr/local/android/android-sdk-linux
 ENV PATH $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 
@@ -41,6 +41,11 @@ RUN xargs -L 1 rbenv install < /root/versions.txt
 RUN echo 'gem: --no-rdoc --no-ri' >> /root/.gemrc
 RUN bash -l -c 'for v in $(cat /root/versions.txt); do rbenv global $v; gem install bundler; done'
 RUN ln -s /root/.rbenv /.rbenv
+
+# Install support for node based builds
+RUN apt-get install -y --force-yes nodejs npm
+RUN apt-get clean
+
 
 # Install various plugins
 ADD ./plugins.txt /root/plugins.txt

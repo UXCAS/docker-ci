@@ -10,7 +10,7 @@ ssh-agent
 greenballs
 TestFairy
 git-client
-git github-api
+git-github-api
 github
 rake
 artifactdeployer
@@ -28,3 +28,4 @@ hockeyapp
 ruby-runtime
 ruby
 rbenv
+jacocco
